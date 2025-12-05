@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Tools Bot - Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body {
+    background: linear-gradient(135deg,#0d0d0d,#1a1a1a);
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+}
+h1,h2 { color:#ff0038; margin-bottom:10px; }
+.card {
+    background: rgba(34,34,34,0.95);
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255,0,56,0.2);
+    transition: all 0.3s ease;
+}
+.card:hover { box-shadow: 0 0 25px rgba(255,0,56,0.4); }
+input,textarea,button,select {
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border-radius:6px;
+    border:1px solid #333;
+    background:#0a0a0a;
+    color:#fff;
+    transition:0.2s;
+}
+input:focus,textarea:focus,select:focus { border-color:#ff0038; outline:none; }
+button {
+    cursor:pointer;
+    background:#ff0038;
+    border:none;
+    color:#fff;
+    font-weight:bold;
+    transition:0.2s;
+}
+button:hover { background:#e6002c; }
+.message-type-btn {
+    display:inline-block;
+    padding:10px 15px;
+    margin:5px;
+    border:1px solid #333;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.2s;
+}
+.message-type-btn.active, .message-type-btn:hover {
+    border-color:#ff0038;
+    background: rgba(255,0,56,0.2);
+}
+.hidden { display:none; }
+.result {
+    padding:10px;
+    margin-top:10px;
+    border-radius:6px;
+    display:none;
+    font-weight:bold;
+}
+.success { background:#003300; color:#0f0; border:1px solid #0f0; }
+.error { background:#330000; color:#f00; border:1px solid #f00; }
+.terminal {
+    background:#000;
+    padding:10px;
+    border:1px solid #333;
+    height:200px;
+    overflow-y:auto;
+    font-size:13px;
+    margin-top:10px;
+    border-radius:6px;
+}
+.nav-btn {
+    background: #222;
+    color: #ff0038;
+    border:none;
+    margin:5px 0;
+    cursor:pointer;
+    padding:10px;
+    border-radius:6px;
+    font-weight:bold;
+    transition:0.2s;
+}
+.nav-btn:hover { background: rgba(255,0,56,0.2); }
+.menu-select {
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #333;
+    background:#0a0a0a;
+    color:#fff;
+    margin-bottom:10px;
+}
+.header-info {
+    margin-bottom:15px;
+}
+.header-info span {
+    display:block;
+    margin-bottom:4px;
+    color:#fff;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- MENU SELECTION -->
+<div class="card">
+    <h1><i class="fas fa-tools"></i> Multi-Tools Bot</h1>
+    <div class="header-info">
+        <span><b>Owner:</b> @Humannnceko</span>
+        <span><b>Bot Name:</b> Multi Tools</span>
+        <span><b>Version:</b> 1.0.0</span>
+    </div>
+
+    <label>Pilih Menu</label>
+    <select class="menu-select" id="menuSelect">
+        <option value="dashboard">Dashboard</option>
+        <option value="spam telegram bot">spam telegram bot</option>
+        <option value="spamNGL">Spam NGL</option>
+    </select>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="card">
+    <h1><i class="fas fa-home"></i> Dashboard</h1>
+    <p>Selamat datang di Multi-Tools Bot. Pilih menu di atas untuk memulai.</p>
+</div>
+
+<!-- DARK MESSENGER -->
+<div id="spam telegram bot" class="card hidden">
+<h1><i class="fas fa-comment-dots"></i> spam telegram bot</h1>
+<h2>Konfigurasi Bot Telegram</h2>
+<label>Bot Token</label>
+<input type="password" id="botToken" placeholder="Masukkan token bot Telegram">
+<button id="testTokenBtn">Test Token</button>
+<button id="viewTokenBtn">Lihat Token</button>
+
+<label>Chat ID</label>
+<input type="text" id="chatId" placeholder="Masukkan Chat ID">
+
+<label>Jumlah Pengiriman</label>
+<input type="number" id="sendCount" placeholder="Jumlah pesan" value="1" min="1">
+
+<h2>Jenis Pesan</h2>
+<div>
+    <div class="message-type-btn active" data-type="text">Teks</div>
+    <div class="message-type-btn" data-type="image">Gambar</div>
+    <div class="message-type-btn" data-type="file">File</div>
+    <div class="message-type-btn" data-type="sticker">Sticker</div>
+</div>
+
+<div id="textContent" class="message-content">
+<textarea id="messageText">Hello! Ini pesan test</textarea>
+</div>
+<div id="imageContent" class="message-content hidden">
+<input type="text" id="imageUrl" placeholder="URL Gambar">
+<textarea id="imageCaption" placeholder="Keterangan Gambar"></textarea>
+</div>
+<div id="fileContent" class="message-content hidden">
+<input type="text" id="fileUrl" placeholder="URL File">
+<textarea id="fileCaption" placeholder="Keterangan File"></textarea>
+</div>
+<div id="stickerContent" class="message-content hidden">
+<input type="text" id="stickerId" placeholder="Sticker ID">
+</div>
+
+<button id="sendButton">Kirim Pesan</button>
+<div id="result" class="result"></div>
+<div class="terminal" id="terminal"></div>
+</div>
+
+<!-- SPAM NGL -->
+<div id="spamNGL" class="card hidden">
+<h1><i class="fas fa-bolt"></i> Spam NGL</h1>
+
+<label>Jumlah Pengiriman (loops)</label>
+<input type="number" id="loops" placeholder="Masukkan jumlah pengiriman" value="5" min="1">
+
+<label>Pesan</label>
+<textarea id="nglMessage" placeholder="Masukkan pesan"></textarea>
+
+<label>Username Target</label>
+<input type="text" id="username" placeholder="Masukkan username target (tanpa @)">
+
+<button id="sendSpamBtn">Kirim Spam</button>
+<div id="resultNGL" class="result"></div>
+<div class="terminal" id="terminalNGL"></div>
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+
+// NAVIGASI SELECT MENU
+const menuSelect = document.getElementById('menuSelect');
+const menus = ['dashboard','spam telegram bot','spamNGL'];
+menuSelect.addEventListener('change',()=>{
+    const value = menuSelect.value;
+    menus.forEach(id=>{
+        document.getElementById(id).classList.add('hidden');
+    });
+    document.getElementById(value).classList.remove('hidden');
+});
+
+// DARK MESSENGER LOGIC
+const messageTypeBtns = document.querySelectorAll('.message-type-btn');
+const messageContents = document.querySelectorAll('.message-content');
+const sendButton = document.getElementById('sendButton');
+const resultDiv = document.getElementById('result');
+const terminal = document.getElementById('terminal');
+const botTokenInput = document.getElementById('botToken');
+const chatIdInput = document.getElementById('chatId');
+const testTokenBtn = document.getElementById('testTokenBtn');
+const viewTokenBtn = document.getElementById('viewTokenBtn');
+const sendCountInput = document.getElementById('sendCount');
+let activeMessageType='text';
+
+viewTokenBtn.addEventListener('click',()=>{ botTokenInput.type=botTokenInput.type==='password'?'text':'password'; });
+
+testTokenBtn.addEventListener('click',async ()=>{
+    const botToken=botTokenInput.value.trim();
+    if(!botToken) return showResult('Token kosong','error');
+    addToTerminal(`Testing token: ${botToken}`);
+    try{
+        const res=await fetch(`https://api.telegram.org/bot${botToken}/getMe`);
+        const data=await res.json();
+        if(data.ok) showResult(`Token valid! Bot: ${data.result.username}`,'success');
+        else showResult(`Token invalid: ${data.description}`,'error');
+    }catch(e){ showResult('Gagal terhubung','error'); }
+});
+
+messageTypeBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        activeMessageType=btn.dataset.type;
+        messageTypeBtns.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        messageContents.forEach(c=>c.classList.add('hidden'));
+        document.getElementById(`${activeMessageType}Content`).classList.remove('hidden');
+        addToTerminal(`Jenis pesan: ${activeMessageType}`);
+    });
+});
+
+sendButton.addEventListener('click',async ()=>{
+    const botToken=botTokenInput.value.trim();
+    const chatId=chatIdInput.value.trim();
+    const count=parseInt(sendCountInput.value)||1;
+    if(!botToken||!chatId) return showResult('Token atau Chat ID kosong','error');
+    if(!/^-?\d+$/.test(chatId)) return showResult('Chat ID harus angka','error');
+    let method,params;
+    try{
+        switch(activeMessageType){
+            case 'text': const text=document.getElementById('messageText').value.trim(); if(!text) throw 'Pesan kosong'; method='sendMessage'; params={text}; break;
+            case 'image': const img=document.getElementById('imageUrl').value.trim(); const caption=document.getElementById('imageCaption').value.trim(); if(!img) throw 'URL gambar kosong'; method='sendPhoto'; params={photo:img}; if(caption) params.caption=caption; break;
+            case 'file': const file=document.getElementById('fileUrl').value.trim(); const fcap=document.getElementById('fileCaption').value.trim(); if(!file) throw 'URL file kosong'; method='sendDocument'; params={document:file}; if(fcap) params.caption=fcap; break;
+            case 'sticker': const sticker=document.getElementById('stickerId').value.trim(); if(!sticker) throw 'Sticker ID kosong'; method='sendSticker'; params={sticker}; break;
+        }
+        for(let i=0;i<count;i++){
+            addToTerminal(`Mengirim ${activeMessageType} ke ${chatId} (${i+1}/${count})`);
+            const res=await fetch(`https://api.telegram.org/bot${botToken}/${method}`,{
+                method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                body:new URLSearchParams({chat_id:chatId,...params})
+            });
+            const data=await res.json();
+            if(data.ok) showResult(`Pesan terkirim (${i+1}/${count})`,'success'); else showResult(data.description||'Gagal','error');
+        }
+    }catch(e){ showResult(e,'error'); }
+});
+
+function showResult(msg,type){ resultDiv.textContent=msg; resultDiv.className=`result ${type}`; resultDiv.style.display='block'; setTimeout(()=>{ resultDiv.style.display='none'; },3000);}
+function addToTerminal(msg){ const line=document.createElement('div'); line.textContent=`$ ${msg}`; terminal.appendChild(line); terminal.scrollTop=terminal.scrollHeight; }
+
+// SPAM NGL LOGIC
+const sendSpamBtn=document.getElementById('sendSpamBtn');
+const terminalNGL=document.getElementById('terminalNGL');
+const resultNGL=document.getElementById('resultNGL');
+
+sendSpamBtn.addEventListener('click',async ()=>{
+    const loops=parseInt(document.getElementById('loops').value)||0;
+    const message=document.getElementById('nglMessage').value.trim();
+    const username=document.getElementById('username').value.trim();
+    if(!loops||loops<=0) return showResultNGL('Jumlah loops tidak valid','error');
+    if(!message) return showResultNGL('Pesan tidak boleh kosong','error');
+    if(!username) return showResultNGL('Username tidak boleh kosong','error');
+    const delay=5000;
+    showResultNGL(`Mengirim ${loops} pesan ke @${username}`,'success');
+    addToTerminalNGL(`Memulai spam ke @${username} sebanyak ${loops} loops`);
+    for(let i=1;i<=loops;i++){
+        try{
+            const arr=new Uint8Array(21);
+            crypto.getRandomValues(arr);
+            const deviceId=Array.from(arr,x=>x.toString(16).padStart(2,'0')).join('');
+            const body=`username=${username}&question=${encodeURIComponent(message)}&deviceId=${deviceId}`;
+            await fetch("https://ngl.link/api/submit",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded; charset=UTF-8"},body});
+            addToTerminalNGL(`(${i}/${loops}) Pesan terkirim`);
+        }catch(e){ addToTerminalNGL(`(${i}/${loops}) Gagal mengirim`);}
+        if(i<loops) await new Promise(r=>setTimeout(r,delay));
+    }
+    showResultNGL(`Selesai mengirim ${loops} pesan ke @${username}`,'success');
+    addToTerminalNGL(`Selesai spam ke @${username}`);
+});
+
+function showResultNGL(msg,type){ resultNGL.textContent=msg; resultNGL.className=`result ${type}`; resultNGL.style.display='block'; setTimeout(()=>{ resultNGL.style.display='none'; },3000);}
+function addToTerminalNGL(msg){ const line=document.createElement('div'); line.textContent=`$ ${msg}`; terminalNGL.appendChild(line); terminalNGL.scrollTop=terminalNGL.scrollHeight;}
+
+});
+</script>
+</body>
+</html>
